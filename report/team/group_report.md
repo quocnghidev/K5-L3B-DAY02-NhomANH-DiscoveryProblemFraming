@@ -139,52 +139,116 @@ Không build cam / Agent. Value vẫn giả định → Not Yet.
 
 ## 4. Quy trình trước/sau (CP5)
 
+> Mọi số phút trong mục này là **ước lượng của nhóm, chưa đo** (chưa quan sát kho thật, xem §3.2). Cách đo thật ghi ở Success Metric §5.
+> Bản Mermaid riêng: [`report/assets/cp5-quy-trinh-mermaid.md`](../assets/cp5-quy-trinh-mermaid.md).
+> Chú thích màu: 🟦 Rule/script · 🟪 AI · 🟩 Con người (HITL) · 🟥 Bottleneck
+
 ### 4.1. Quy trình hiện tại
 
-```text
-HIỆN TẠI (giả định / chưa đo)
+```mermaid
+flowchart TD
+    A["1. NV nhận bao hoàn từ bưu tá<br/>~15'/ca"] --> B["2. NV khui + quét tem<br/>~0.5'/kiện"]
+    B -->|Quét OK| C["3a. NV mở Sheets/OMS tìm đơn<br/>~1'"]
+    B -->|Quét FAIL| E["3b. Dò SĐT trên Sheets, hỏi Zalo shop<br/>~5–8'/kiện"]
+    E -->|Tìm ra đơn| D
+    E -->|Không tìm ra| F["Để góc mù<br/>không ai theo dõi"]
+    C --> D["4. Đối chiếu bằng mắt / đếm hộp<br/>không tick từng dòng<br/>~2–3'/kiện"]
+    D --> G["5. Ghi chú giấy / Zalo<br/>~1'"]
+    G --> H["6. NV cất kệ<br/>~1'"]
+    G --> I["7. Admin cộng tồn từ ghi chú cuối ca<br/>~20'/ca"]
 
-[Nhận bao] → [Phân luồng]
-  → [Khui + quét tem]
-       ├─ OK  → [? mở Sheets/OMS / đếm hộp / không tick đủ dòng] → cộng tồn
-       └─ FAIL → [dò SĐT / hỏi Zalo / để góc mù] ← BOTTLENECK nhánh
-  → [Cất kệ]
+    classDef bottleneck fill:#fde2e2,stroke:#c0392b,stroke-width:2px,color:#000
+    classDef human fill:#e3f4e1,stroke:#2e7d32,color:#000
+    class D,E bottleneck
+    class A,B,C,G,H,I,F human
 ```
 
-| Bước | Actor | Input | Output | Thời gian / tần suất | Ghi chú |
-|---:|---|---|---|---|---|
-| 1 | NV nhận | Bao hoàn | Kiện vào bàn | theo ca | |
-| 2 | NV khui | Kiện + tem | Tem OK / fail | mỗi kiện | |
-| 3 | NV khui | Đơn / không đơn | Tình trạng hàng | **ước 2–4'/multi-SKU; 5–8'/mất mã** (chưa đo) | Bottleneck |
-| 4 | NV / Admin | Ghi chú | Cộng tồn | cuối kiện / cuối ca | Rủi ro restock mù |
-| 5 | NV | Hàng đã ghi | Lên kệ | | |
+```text
+HIỆN TẠI — 1 kiện multi-SKU (ước lượng, chưa đo)
 
-**Bottleneck chính:** Bước 3 — thiếu list tick có cấu trúc; khi tem fail thì định danh đơn kéo dài.
+Tem OK  : [Khui+quét 0.5'] → [Mở Sheets tìm đơn 1'] → [Đối chiếu bằng mắt 2–3'] ← BOTTLENECK
+          → [Ghi chú 1'] → [Cất kệ 1']                                ≈ 6'/kiện
+Tem FAIL: [Khui+quét 0.5'] → [Dò SĐT/Zalo 5–8'] ← BOTTLENECK nhánh → [Đối chiếu 2–3']
+          → [Ghi chú 1'] → [Cất kệ 1']                                ≈ 11'/kiện (hoặc vào góc mù)
+Cuối ca : [Admin cộng tồn từ ghi chú ~20'/ca]
+```
+
+| Bước | Actor | Input | Output | Thời gian / tần suất (ước lượng) | Handoff |
+|---:|---|---|---|---|---|
+| 1 | NV nhận | Bao hoàn từ bưu tá | Kiện lên bàn khui | ~15'/ca, 1–2 lần/ngày | → NV khui |
+| 2 | NV khui | Kiện + tem vận đơn | Mã đơn (OK) hoặc không có mã (FAIL) | ~0.5'/kiện, 50–300 kiện/ngày | — |
+| 3a | NV khui | Mã đơn | Đơn trên Sheets/OMS | ~1'/kiện | — |
+| 3b | NV khui | SĐT / tên còn đọc được, hỏi shop qua Zalo | Đơn đoán được hoặc không | **~5–8'/kiện**, giả định 5–10% kiện | → shop (Zalo) nếu không tự tìm ra |
+| 4 | NV khui | Hàng thật + list đơn (nếu có mở) | Kết luận "đủ/thiếu" trong đầu, không có bản ghi từng dòng | **~2–3'/kiện multi-SKU** | — |
+| 5 | NV khui | Kết luận bước 4 | Ghi chú giấy / tin Zalo | ~1'/kiện | → Admin |
+| 6 | NV khui | Hàng đã khui | Hàng trên kệ | ~1'/kiện | — |
+| 7 | Admin | Ghi chú cả ca | Tồn kho cập nhật | ~20'/ca | — |
+
+**Bottleneck chính:** Bước 4. Không có list tick từng dòng nên NV đối chiếu bằng mắt, không để lại bản ghi, dễ sót hoặc nhận tráo rồi vẫn cộng tồn.
+**Bottleneck nhánh:** Bước 3b. Tem fail thì phải dò đơn 5–8' mới đối chiếu được, hoặc kiện bị bỏ vào góc mù.
 
 ### 4.2. Quy trình tương lai
 
-```text
-TƯƠNG LAI (framing)
+```mermaid
+flowchart TD
+    B["1. NV khui + quét tem<br/>~0.5'"]
+    B -->|Quét OK| L["2. Hiện list xuất gốc từ Sheets/OMS<br/>tự động"]
+    B -->|Quét FAIL| S["F1. Form thu tín hiệu: 4 số cuối SĐT,<br/>SKU nhìn thấy, shop, ảnh SP<br/>~1'"]
+    S --> P["F2. Lọc đơn đang hoàn<br/>theo shop + 14 ngày gần nhất"]
+    P --> AI["F3. AI xếp hạng tối đa 3 đơn<br/>kèm lý do ngắn · ≤30s"]
+    AI --> H1{"F4. NV so hàng thật với list<br/>từng ứng viên · ~1'<br/>HITL"}
+    AI -.->|Lỗi / timeout / thiếu tín hiệu| FB
+    H1 -->|Chọn 1 đơn| L
+    H1 -->|Không khớp| FB["FALLBACK: góc chờ + lookup tay như cũ<br/>trưởng ca xử lý cuối ca"]
+    L --> T["3. NV tick từng dòng: đủ / thiếu / tráo<br/>~2–3'"]
+    T --> R{"4. Đã tick hết mọi dòng?"}
+    R -->|Chưa: chặn cộng tồn| T
+    R -->|Rồi| C["5. Ghi tồn dòng đủ;<br/>dòng thiếu/tráo vào góc chờ + báo trưởng ca"]
+    C --> K["6. NV cất kệ · ~1'"]
+    C --> M["7. Trưởng ca duyệt thiếu/tráo<br/>+ kiểm ngẫu nhiên 5 kiện/ca · ~5'/ca"]
 
-[Khui + quét]
-  ├─ OK  —RULE→ [Hiện list] —NGƯỜI→ [Tick đủ/thiếu/tráo] —RULE→ [Cho phép cộng tồn]
-  └─ FAIL —RULE→ [Thu tín hiệu SĐT/SKU/ảnh]
-           —AI→ [Top 2–3 đơn + lý do ngắn]
-           —HITL→ [Chọn 1 / “không khớp”]
-                ├─ chọn 1 → list + tick như trên
-                └─ không khớp → góc chờ + lookup tay (fallback)
-Boundary: AI không tự chọn đơn, không sửa tồn, không gửi khiếu nại.
+    classDef rule fill:#e1ecfb,stroke:#1f5fae,color:#000
+    classDef ai fill:#efe1fb,stroke:#7b2fae,stroke-width:2px,color:#000
+    classDef human fill:#e3f4e1,stroke:#2e7d32,color:#000
+    class L,S,P,R,C rule
+    class AI ai
+    class B,H1,FB,T,K,M human
 ```
+
+| Bước | Ai / cái gì làm | Loại | Ghi chú |
+|---:|---|---|---|
+| 1 | NV khui | Con người | Như cũ |
+| 2 | Sheets/OMS hiện list theo mã đơn | **Rule** | Không cần AI: tra theo mã là đúng/sai rõ |
+| 3 | NV tick đủ / thiếu / tráo từng dòng | **Con người** | Thay cho "đối chiếu bằng mắt + ghi chú" |
+| 4 | Chặn cộng tồn khi còn dòng chưa tick | **Rule** | if/else trên checklist |
+| 5 | Ghi tồn dòng "đủ"; dòng thiếu/tráo → góc chờ + báo trưởng ca | **Rule** | Bỏ bước admin nhập tay cuối ca |
+| 6 | NV cất kệ | Con người | Như cũ |
+| 7 | Trưởng ca duyệt thiếu/tráo + kiểm ngẫu nhiên 5 kiện/ca | **Con người (HITL)** | Chống "tick cho có" |
+| F1–F2 | Form thu tín hiệu + lọc đơn đang hoàn theo shop, 14 ngày | **Rule** | Thu hẹp tập ứng viên trước khi gọi AI |
+| F3 | Xếp hạng tối đa 3 đơn kèm lý do | **AI** | Điểm AI duy nhất trong quy trình |
+| F4 | NV so hàng thật với list từng ứng viên, chọn 1 hoặc "không khớp" | **Con người (HITL)** | Bắt buộc, kể cả khi chỉ có 1 ứng viên |
+
+**Boundary:** AI không tự chọn đơn, không sửa tồn, không gửi khiếu nại sàn/khách, không nhận SĐT đầy đủ hay tên khách (chỉ 4 số cuối + SKU + shop + ảnh SP).
+
+**Khi nào con người kiểm tra (HITL):** (1) mọi kiện tem fail, NV chọn đơn ở F4; (2) mọi kiện, NV tick ở bước 3; (3) mọi dòng thiếu/tráo, trưởng ca duyệt ở bước 7; (4) trưởng ca kiểm ngẫu nhiên 5 kiện/ca.
+
+**Phương án quay về:**
+
+- AI lỗi, timeout >30s, trả "không đủ tín hiệu" hoặc NV bấm "không khớp" → góc chờ + lookup tay như quy trình hiện tại; trưởng ca xử lý cuối ca.
+- Sheets/OMS không mở được list → ghi phiếu giấy, **không cộng tồn** đến khi nhập lại và tick.
+- Pilot cho thấy AI không giúp (xem ngưỡng §8) → tắt nhánh F3, giữ F1–F2 Rule lọc + lookup tay.
 
 ### 4.3. Before / after
 
-| Chỉ số | Trước | Sau (kỳ vọng) | Ghi chú |
+| Chỉ số | Trước (ước lượng) | Sau (kỳ vọng) | Ghi chú |
 |---|---:|---:|---|
-| Số bước | ~5 | ~5–6 (thêm AI+HITL chỉ khi fail) | Đa số kiện không gọi AI |
-| Tổng thời gian | chưa đo | ↓ phút đối chiếu / định danh fail | Giả định |
-| Số bước thủ công | hầu hết | tick vẫn tay; AI chỉ gợi ý | Augment |
-| Bottleneck chính | thiếu tick + dò đơn khi fail | ép tick; rút gọn dò đơn nếu G3 đúng | |
-| Rủi ro mới phát sinh | — | Gợi ý sai → chọn nhầm đơn nếu bỏ qua HITL | Mitigate bằng bắt buộc người chọn |
+| Thời gian/kiện multi-SKU, tem OK | ~6' | ~4–6' | Tick thay "đối chiếu bằng mắt + ghi chú". **Không được chậm hơn trước** (guardrail) |
+| Thời gian/kiện, tem fail | ~11' hoặc vào góc mù | ~6–7' nếu AI gợi ý trúng; ~11' khi fallback | Chỉ 5–10% kiện (giả định G3) |
+| Admin cộng tồn cuối ca | ~20'/ca | ~0' (Rule ghi tồn) + trưởng ca duyệt ~5'/ca | |
+| Kiện có bản ghi tick từng dòng | ~0% (hiện không có checklist, giả định G1) | ≥90% | Metric chính |
+| Số bước thủ công (nhánh OK) | 6/6 | 3/5 (khui, tick, cất kệ) | Rule làm hiện list, chặn, ghi tồn |
+| Bottleneck chính | Đối chiếu bằng mắt; dò đơn khi tem fail | NV tick từng dòng | Bottleneck chấp nhận được vì đây là điểm kiểm soát chất lượng |
+| Rủi ro mới phát sinh | — | (1) AI gợi ý sai → chọn nhầm đơn; (2) NV "tick cho có" | (1) HITL bắt buộc + eval §7; (2) trưởng ca kiểm ngẫu nhiên |
 
 ---
 
@@ -192,17 +256,27 @@ Boundary: AI không tự chọn đơn, không sửa tồn, không gửi khiếu 
 
 | Trường | Nội dung |
 |---|---|
-| **Actor** | NV bàn khui kho TMĐT/fulfillment vừa (Sheets/OMS nhẹ) |
-| **Quy trình** | Nhận bao → khui/quét → đối chiếu & ghi nhận → cộng tồn → cất kệ |
-| **Bottleneck** | Đối chiếu list / định danh đơn trước restock (đặc biệt multi-SKU; nặng hơn khi tem fail) |
-| **Impact** | Restock mù, sót/tráo, hàng góc mù, lệch tồn *(mức độ = giả định / chưa đo)* |
-| **Success Metric** (baseline → target, cách đo) | % kiện multi-SKU tick đủ dòng trước restock: baseline chưa đo → target ↑ (vd ≥80% mẫu 20 kiện) khi có quan sát; phút/kiện fail: ↓ ≥50% nếu bật AI — cách đo log/quan sát |
-| **Boundary** (AI không được làm gì; khi nào cần con người kiểm tra — HITL) | v0: tập trung Rule; AI chưa bắt buộc. Con người luôn tick và luôn chốt đơn khi tem fail. |
+| **Actor** | NV bàn khui hàng hoàn ở kho fulfillment / shop tự kho TMĐT quy mô vừa (~50–300 kiện hoàn/ngày, *giả định*), quản lý đơn trên Sheets hoặc OMS nhẹ, chưa có WMS |
+| **Quy trình** | Nhận bao → khui + quét tem → (OK) mở Sheets/OMS tìm đơn / (FAIL) dò SĐT, hỏi Zalo → đối chiếu bằng mắt → ghi chú → cất kệ → admin cộng tồn cuối ca |
+| **Bottleneck** | Bước đối chiếu hàng với list xuất gốc: không có checklist từng dòng nên làm bằng mắt (~2–3'/kiện multi-SKU), không để lại bản ghi, dễ sót/tráo. Nặng hơn khi tem fail vì phải dò đơn ~5–8' mới đối chiếu được |
+| **Impact** | Hàng thiếu/tráo vẫn được cộng tồn; kiện tem fail nằm góc mù; lệch tồn chỉ lộ khi kiểm kê; admin mất ~20'/ca nhập lại ghi chú *(ước lượng, chưa đo)* |
+| **Success Metric** | Xem bảng ngay dưới |
+| **Boundary** (không được làm gì; khi nào cần HITL) | Không cộng tồn kiện chưa được người tick đủ mọi dòng. Quyết định "kiện này của đơn nào" và "đủ/thiếu/tráo" luôn do NV đưa ra; mọi dòng thiếu/tráo phải qua trưởng ca duyệt. Mọi công cụ hỗ trợ không được tự chốt đơn, tự sửa tồn, tự gửi khiếu nại |
 
-Phản biện nhận được (từ AI hoặc nhóm khác) và nhóm có đồng ý không:
+**Success Metric v0:**
 
-- Phản biện: không interview thì Value yếu → **đồng ý**, để Not Yet; không bịa snapshot.
-- Phản biện: chỉ Rule thì “không có AI” → **đồng ý một phần**, bổ sung 1 điểm AI có điều kiện G3 ở v1.
+| # | Metric | Baseline | Target | Cách đo |
+|---:|---|---|---|---|
+| M1 | % kiện multi-SKU có tick đủ mọi dòng trước khi cộng tồn | ≈0% *(giả định G1: hiện không có checklist)*. Xác nhận bằng quan sát 1 ca trước pilot | ≥90% | Đếm số kiện có log tick / tổng kiện được cộng tồn, 2 tuần pilot |
+| M2 | Thời gian xử lý/kiện multi-SKU (quét → cất kệ) | ~6' tem OK, ~11' tem fail *(ước lượng)* | Tem OK: không tăng; tem fail: ≤6' | Bấm giờ 20 kiện/ca × 2 ca trước pilot và 2 ca cuối pilot |
+| M3 | Số dòng SKU hàng hoàn lệch khi kiểm kê tuần | Chưa đo: lấy từ biên bản kiểm kê 4 tuần gần nhất | Giảm ≥50% | So biên bản kiểm kê 4 tuần trước với 4 tuần pilot |
+
+Phản biện nhận được (từ AI và trong nhóm) và nhóm có đồng ý không:
+
+- "Không phỏng vấn thì Value yếu" → **Đồng ý.** Giữ Not Yet, không bịa snapshot; baseline ghi rõ "ước lượng / giả định".
+- "Bắt tick từng dòng có thể làm NV chậm hơn" → **Đồng ý.** Đặt M2 nhánh tem OK làm **guardrail** (không được tăng), còn M1 và M3 là metric chính.
+- "v0 chỉ đo tốc độ và tỉ lệ tick, chưa đo NV có tick đúng hay không" → **Đồng ý một phần.** M3 (lệch kiểm kê) gián tiếp đo độ đúng; thêm kiểm ngẫu nhiên 5 kiện/ca vào quy trình tương lai.
+- "Chỉ Rule thì không có AI" → **Đồng ý một phần.** Mức can thiệp chưa chốt ở v0; CP6 xét thêm 1 điểm AI có điều kiện G3.
 
 ---
 
@@ -210,38 +284,47 @@ Phản biện nhận được (từ AI hoặc nhóm khác) và nhóm có đồng
 
 ### 6.1. Ma trận độ mơ hồ × độ phức tạp
 
-Bài của nhóm nằm ở ô: **độ mơ hồ trung bình (tem fail / nhiều đơn gần giống) × độ phức tạp thấp–TB (một bước gợi ý trong luồng cố định)**.
+| Phần việc | Độ mơ hồ | Độ phức tạp | Ô ma trận → mức |
+|---|---|---|---|
+| Hiện list theo mã đơn, chặn cộng tồn, ghi tồn | **Thấp**: tra mã có đúng/sai rõ | **Thấp**: 1 nguồn, các bước cố định | Rule |
+| Định danh đơn khi tem fail | **Cao**: tín hiệu thiếu, mờ, nhiều đơn gần giống (cùng shop, cùng SKU, SĐT chỉ còn vài số) | **Thấp–TB**: 1 bước trong luồng cố định, không rẽ nhánh tự do | Workflow có AI ở 1 bước |
 
-Vì sao: Bước tick là Rule rõ; chỉ đoạn map tín hiệu → ứng viên đơn là mơ hồ vừa phải, không cần Agent tự lập kế hoạch.
+Vì sao: phần lớn quy trình có đúng/sai rõ nên Rule là đủ. Chỉ đoạn "từ tín hiệu không đầy đủ → đơn nào" là mơ hồ, và đoạn đó nằm gọn trong một bước, nên không cần AI tự lập kế hoạch.
 
 ### 6.2. So sánh 4 mức
 
 | Mức | Phương án cho bài của nhóm | Đủ khi nào | Rủi ro | Chọn? |
 |---|---|---|---|---|
-| **No AI** (sửa quy trình) | Nhắc soi list | NV đã tự tick tốt | Không đổi hành vi | Không đủ một mình |
-| **Rule** | Bắt buộc tick + cấm cộng tồn chưa tick; tem phụ | G1–G2 đúng; tem fail ít hoặc lookup tay nhanh | Không giải định danh khi fail | **Luôn bật** |
-| **Workflow** | Rule + (khi fail) AI top-3 → HITL → list tick | G3 đúng: lookup tay tắc | Gợi ý sai; phụ thuộc input | **Chọn (AI chỉ 1 bước)** |
-| **Agent** | AI tự chọn đơn / tự tồn / tự claim | Không | Sai đơn = thiệt hại tiền | **Không** |
+| **No AI** | SOP "soi list trước khi cộng tồn" + in list giấy + nhắc miệng | NV đã có thói quen tick | Không ép được hành vi; không có bản ghi để đo | Không đủ một mình |
+| **Rule** | Sheets/OMS hiện list theo mã; checklist tick bắt buộc; chặn cộng tồn khi chưa tick; khi tem fail, lọc đơn đang hoàn theo shop + 4 số SĐT + 14 ngày | Tem fail ít, **hoặc** Rule lọc đã ra ≤3 ứng viên ở phần lớn ca fail | Không xử lý được tín hiệu chỉ còn ảnh SP / chữ mờ / SĐT thiếu → ra quá nhiều ứng viên | **Luôn bật** (nền) |
+| **Workflow** | Rule nền + (chỉ khi tem fail và Rule lọc ra >3 ứng viên) AI xếp hạng top-3 → NV chọn → list tick | G3 đúng: tem fail đủ nhiều và Rule lọc không thu hẹp đủ | Gợi ý sai; phụ thuộc input; chi phí gọi model | **Chọn** (AI chỉ 1 bước) |
+| **Agent** | AI tự tìm nguồn, tự chọn đơn, tự cộng tồn, tự gửi khiếu nại | Không có trường hợp nào: bước tiếp theo luôn biết trước | Chọn nhầm đơn = cộng tồn sai, khiếu nại sai, mất tiền | **Không** |
 
-**Mức chọn:** **Workflow** = Rule (nền) + AI gợi ý trên nhánh tem fail.
+**Mức chọn:** **Workflow** = Rule (nền, luôn bật) + AI xếp hạng ứng viên ở nhánh tem fail.
 
-**Vì sao không chọn mức đơn giản hơn:** Chỉ Rule không rút được thời gian định danh khi G3 đúng. Chỉ No AI không ép được hành vi tick.
+**Vì sao không chọn mức đơn giản hơn:**
+
+- **No AI** không ép được hành vi tick và không để lại bản ghi, nên không đo được M1.
+- **Rule** giải được phần tick và phần lọc khi tín hiệu rõ. Nhưng khi tín hiệu chỉ còn ảnh SP, chữ tay mờ hoặc SĐT thiếu số, Rule lọc sẽ ra hàng chục đơn cùng shop. NV vẫn phải dò tay ~5–8', đúng bottleneck nhánh.
+- **Điều kiện để giữ AI:** pilot chạy Rule lọc trước. Nếu Rule lọc đã ra ≤3 ứng viên ở ≥80% ca tem fail → **không cần AI, hạ xuống Rule** (ngưỡng dừng §8).
+
+**Vì sao không chọn Agent:** quy trình cố định, chỉ một chỗ cần "đoán". Cho AI quyền tự chốt đơn hoặc sửa tồn sẽ làm kiểu sai tệ nhất (báo nhầm, §6.4) xảy ra mà không ai chặn.
 
 ### 6.3. AI Canvas rút gọn
 
 | Thành phần | Nội dung |
 |---|---|
-| **Prediction** — AI dự đoán / tạo ra gì? | Xếp hạng 2–3 đơn ứng viên (+ lý do ngắn) khi tem không quét được |
-| **Judgment** — con người cân nhắc, quyết định gì? | Chọn 1 đơn hoặc từ chối gợi ý → lookup tay / góc chờ |
-| **Action** — hành động cuối cùng là gì, ai làm? | NV mở list, tick, (được phép) cộng tồn — người làm |
-| **Outcome** — đo kết quả bằng gì? | Phút định danh khi fail; % chọn đúng trong top-3; % tick đủ dòng |
-| **Input** — AI cần dữ liệu đầu vào gì mỗi lần chạy? Có sẵn không? | SĐT/SKU/shop/thời cửa sổ đơn gần đây ± ảnh; *giả định có trên OMS/Sheets — chưa xác minh* |
-| **Feedback** — lấy phản hồi ở đâu để cải thiện? | Log: đơn người chọn vs top-3; nút “không khớp” |
+| **Prediction**: AI dự đoán / tạo ra gì? | Xếp hạng tối đa 3 đơn ứng viên cho kiện tem fail, mỗi đơn kèm lý do ngắn (khớp trường nào); hoặc trả "không đủ tín hiệu" |
+| **Judgment**: con người cân nhắc, quyết định gì? | NV so hàng thật trong kiện với list SKU của từng ứng viên → chọn 1 đơn hoặc "không khớp". Trưởng ca duyệt kiện "không khớp" và các dòng thiếu/tráo |
+| **Action**: hành động cuối cùng là gì, ai làm? | NV mở list của đơn đã chọn → tick từng dòng → Rule ghi tồn dòng "đủ". AI không thực hiện hành động nào |
+| **Outcome**: đo kết quả bằng gì? | M2 (phút/kiện tem fail), M4 (% đơn đúng nằm trong top-3), M5 (số lần chọn nhầm đơn sau HITL) |
+| **Input**: AI cần dữ liệu gì mỗi lần chạy? Có sẵn không? | (1) Tín hiệu từ kiện: 4 số cuối SĐT, SKU/biến thể nhìn thấy, shop trên bao bì, ảnh SP nếu kho cho phép; (2) danh sách đơn đang hoàn của shop đó trong 14 ngày (mã đơn, 4 số cuối SĐT, SKU + biến thể, ngày giao), lấy bằng Rule F2. *Giả định có sẵn trên Sheets/OMS (G2, G4), chưa xác minh với kho thật* |
+| **Feedback**: lấy phản hồi ở đâu để cải thiện? | Log mỗi kiện fail: top-3 AI đưa ra, đơn NV chọn, số lần bấm "không khớp"; đơn thật của kiện "không khớp" sau khi trưởng ca xử lý → bổ sung vào bộ eval |
 
 ### 6.4. Hai câu hỏi của Google PAIR
 
-- Người dùng muốn **được hỗ trợ (augment)** hay **giao hẳn việc (automate)**? Bằng chứng: thiết kế **augment** — gợi ý + HITL; không có bằng chứng người muốn giao máy tự chốt đơn (và rủi ro tiền cao nếu automate).
-- AI sai kiểu nào tệ hơn, **báo nhầm** hay **bỏ sót**? **Báo nhầm (đưa đơn sai / tự tin sai) tệ hơn** vì dễ cộng tồn nhầm. Thiết kế: không auto-select; ưu tiên “không chắc → không khớp”; eval phạt rank đưa đơn sai lên top.
+- **Augment hay automate?** → **Augment.** AI chỉ thu hẹp từ hàng chục đơn xuống 2–3 đơn; NV vẫn so hàng thật và chọn. Chưa có bằng chứng người kho muốn giao máy tự chốt đơn (chưa phỏng vấn, G5). Automate có rủi ro tiền cao: cộng tồn sai, khiếu nại sai.
+- **AI sai kiểu nào tệ hơn?** → **Báo nhầm tệ hơn bỏ sót.** Đưa đơn sai lên top khiến NV dễ chọn nhầm → cộng tồn sai đơn, khó phát hiện. Bỏ sót (không gợi ý được) chỉ làm NV quay về lookup tay như hiện tại. Thiết kế: không auto-select; thiếu tín hiệu thì trả "không đủ tín hiệu"; eval phạt nặng việc bịa ID và chọn nhầm sau HITL.
 
 ---
 
@@ -249,33 +332,47 @@ Vì sao: Bước tick là Rule rõ; chỉ đoạn map tín hiệu → ứng viê
 
 | Trường | Nội dung |
 |---|---|
-| **Actor** | NV bàn khui kho TMĐT/fulfillment vừa |
-| **Quy trình** | Quét → (fail: AI gợi ý → HITL) → list tick → cộng tồn |
-| **Bottleneck** | Thiếu tick trước restock; định danh khi tem fail *(G3 giả định)* |
-| **Impact** | Restock sai / sót–tráo / hàng mù *(chưa đo)* |
-| **Success Metric** (baseline → target, cách đo) | Như v0 + thêm: % lần đơn đúng nằm trong top-3 khi fail (mẫu có nhãn sau HITL) |
-| **Boundary** | AI không tự chọn đơn, không sửa tồn, không khiếu nại; không gửi PII thừa |
-| **AI intervention point** | Sau quét fail & trước khi mở list tick: rank 2–3 đơn |
+| **Actor** | NV bàn khui hàng hoàn ở kho fulfillment / shop tự kho TMĐT vừa, quản lý đơn trên Sheets/OMS nhẹ, **list xuất gốc mở được theo mã đơn** (G2), và **tem fail chiếm đủ nhiều, ≥5% kiện hoàn** (G3, *giả định*) |
+| **Quy trình** | Khui + quét → (OK) list tự hiện → tick từng dòng → Rule ghi tồn / (FAIL) form tín hiệu → Rule lọc đơn đang hoàn → AI top-3 → NV chọn → list → tick |
+| **Bottleneck** | Như v0: đối chiếu không có checklist; định danh đơn khi tem fail ~5–8' |
+| **Impact** | Như v0 *(ước lượng, chưa đo)* |
+| **Success Metric** | M1–M3 như v0, thêm M4–M5 (bảng dưới) |
+| **Boundary** | Như v0, thêm: AI **không tự chọn đơn kể cả khi chỉ có 1 ứng viên**; không sửa tồn; không gửi khiếu nại; không nhận SĐT đầy đủ / tên khách; thiếu tín hiệu thì phải trả "không đủ tín hiệu" thay vì đoán. HITL bắt buộc ở F4 (chọn đơn), bước 3 (tick), bước 7 (trưởng ca duyệt) |
+| **AI intervention point** | Sau khi quét tem FAIL và Rule lọc ra **>3** đơn ứng viên; trước khi NV chọn đơn và mở list tick. Không có AI ở nhánh tem OK |
 | **Mức chọn** | Workflow (Rule nền + AI 1 bước) |
-| **Rủi ro & người kiểm tra** | Chọn nhầm đơn → NV + trưởng ca review; fallback lookup tay |
+| **Rủi ro & người kiểm tra** | (1) AI gợi ý sai → NV chọn nhầm: NV so hàng thật với list từng ứng viên; trưởng ca kiểm ngẫu nhiên 5 kiện/ca. (2) NV tick cho có: trưởng ca kiểm ngẫu nhiên + M3 kiểm kê. (3) Lộ dữ liệu khách: chỉ gửi 4 số cuối SĐT + SKU + shop; chủ kho duyệt việc dùng ảnh |
+
+**Success Metric v1:**
+
+| # | Metric | Baseline | Target | Cách đo |
+|---:|---|---|---|---|
+| M1 | % kiện multi-SKU tick đủ mọi dòng trước cộng tồn | ≈0% *(giả định)* | ≥90% | Log tick / tổng kiện cộng tồn, 2 tuần pilot |
+| M2 | Phút/kiện (quét → cất kệ) | ~6' OK, ~11' fail *(ước lượng)* | OK: không tăng; fail: ≤6' | Bấm giờ 20 kiện/ca × 2 ca trước và cuối pilot |
+| M3 | Dòng SKU hàng hoàn lệch khi kiểm kê tuần | Biên bản 4 tuần gần nhất | Giảm ≥50% | So 4 tuần trước với 4 tuần pilot |
+| M4 *(mới)* | % kiện tem fail có đơn đúng nằm trong top-3 AI | — (chưa có AI) | ≥80% | Bộ eval 30 kiện + log pilot: so top-3 với đơn thật sau khi xác định |
+| M5 *(mới)* | Số lần chọn nhầm đơn sau HITL | — | **0** trong pilot | Trưởng ca kiểm ngẫu nhiên + đối chiếu khi kiểm kê |
 
 **Thay đổi so với v0 và lý do:**
 
 | Trường | v0 | v1 | Vì sao đổi |
 |---|---|---|---|
-| AI intervention | Chưa có / không bắt buộc | Có — chỉ nhánh tem fail | Muốn có điểm AI hợp lệ khi G3; không nhét AI vào tick |
-| Mức | ngầm Rule | Workflow | Rule không đủ nếu lookup fail tắc |
-| Boundary | HITL tick | HITL chọn đơn + tick | Giảm rủi ro báo nhầm |
+| Actor | Kho vừa, Sheets/OMS nhẹ | Thêm: list xuất mở được theo mã đơn **và** tem fail ≥5% kiện | AI Canvas: ô Input cần list đơn đang hoàn (G2). Nếu tem fail hiếm thì nhánh AI không đáng làm (G3), với kho đó chỉ Rule là đủ |
+| Quy trình | Chưa tách nhánh fail | Nhánh fail = Rule lọc → AI → HITL | So sánh 4 mức (§6.2): Rule lọc trước để AI chỉ xử lý phần mơ hồ còn lại |
+| Success Metric | M1–M3 (tỉ lệ tick, thời gian, lệch kiểm kê) | Thêm M4 (top-3 đúng) và M5 (chọn nhầm = 0) | PAIR §6.4: báo nhầm tệ hơn bỏ sót, nên phải đo chất lượng gợi ý, không chỉ đo tốc độ |
+| Boundary | Không cộng tồn chưa tick; người chốt đơn | Thêm: không auto-select dù chỉ 1 ứng viên; không nhận PII đầy đủ; bắt buộc trả "không đủ tín hiệu" | G5 (chọn nhầm tệ hơn) + rủi ro Viability về dữ liệu khách |
+| *(mới)* AI intervention point / Mức chọn / Rủi ro & người kiểm tra | — | Như bảng trên | Trường bắt buộc của v1 sau CP6 |
 
-**Tiêu chí đánh giá đầu ra của AI (3–5 tiêu chí):**
+**Tiêu chí đánh giá đầu ra của AI:**
 
 | # | Tiêu chí | Đạt khi | Không đạt khi |
 |---:|---|---|---|
-| 1 | Đơn đúng trong top-3 | Sau khi người xác định đơn thật, đơn đó ∈ top-3 | Đơn đúng không có trong gợi ý trong khi tín hiệu đủ |
-| 2 | Không bịa đơn | Mọi ID gợi ý tồn tại trên dữ liệu kho đã nạp | ID không có trong nguồn |
-| 3 | Lý do khớp tín hiệu | Lý do nêu đúng field dùng (SĐT/SKU…) | Lý do không liên quan / mâu thuẫn input |
-| 4 | Từ chối khi thiếu tín hiệu | Trả “không đủ dữ liệu” thay vì đoán bừa | Vẫn rank khi input rỗng/rác |
-| 5 | Latency chấp nhận được | Gợi ý xong trước khi NV bỏ sang góc mù *(ngưỡng chưa đo)* | Chờ lâu hơn lookup tay quen thuộc |
+| 1 | Đơn đúng trong top-3 | Đơn thật của kiện nằm trong top-3, ở ≥80% kiện có đủ tín hiệu | Đơn đúng không có trong gợi ý dù tín hiệu đủ (có ≥2 trong: 4 số SĐT, SKU, shop) |
+| 2 | Không bịa đơn | 100% mã đơn gợi ý có trong danh sách đơn đang hoàn đã đưa vào | Có bất kỳ mã đơn nào không có trong input |
+| 3 | Lý do truy được về input | Mỗi gợi ý nêu đúng trường đã khớp (vd "khớp 4 số SĐT + SKU áo đen size M") | Lý do chung chung, hoặc nêu trường không có / mâu thuẫn với input |
+| 4 | Biết từ chối | Input có <2 tín hiệu hoặc không có đơn nào khớp → trả "không đủ tín hiệu", không xếp hạng | Vẫn đưa top-3 khi input rỗng hoặc rác |
+| 5 | Nhanh hơn lookup tay | Trả kết quả ≤30s | >30s, tức NV bỏ sang lookup tay |
+
+**Bộ eval (kế hoạch, chưa chạy):** 30 kiện từ đơn hoàn đã biết đáp án. Che tem, chỉ giữ tín hiệu như tình huống thật (4 số SĐT, ảnh SP, SKU nhìn thấy, shop), trộn thêm 5 ca input rỗng/rác để kiểm tiêu chí 4. Chạy gợi ý, chấm theo 5 tiêu chí trên. Không đạt tiêu chí 2 ở bất kỳ ca nào → chưa đưa vào pilot.
 
 ---
 
@@ -302,7 +399,12 @@ Vì sao: Bước tick là Rule rõ; chỉ đoạn map tín hiệu → ứng viê
 
 **Nếu No-Go — nên làm gì thay AI:** Chỉ Rule/SOP + tem phụ + checklist Sheets; dùng Camsight/Ship Xanh sẵn cho video.
 
-**Ngưỡng dừng** (nếu sau … mà … thì quay về …): Nếu sau khi có ≥2 nguồn quan sát/hỏi mà lookup tem fail trung bình &lt;2 phút và NV đã tick list → **tắt AI**, giữ Rule; nếu không có list đâu cả → **đổi ngách**.
+**Ngưỡng dừng** (nếu sau … mà … thì quay về …):
+
+- Nếu sau khi có ≥2 nguồn quan sát/hỏi mà lookup tem fail trung bình &lt;2 phút và NV đã tick list → **tắt AI**, giữ Rule; nếu không có list đâu cả → **đổi ngách**.
+- Nếu trong pilot, Rule lọc (shop + 4 số SĐT + 14 ngày) đã ra ≤3 ứng viên ở ≥80% ca tem fail → **tắt AI**, hạ xuống Rule (§6.2).
+- Nếu sau 2 tuần pilot M4 (đơn đúng trong top-3) &lt;80%, hoặc có **1 lần** chọn nhầm đơn sau HITL (M5 &gt; 0) → dừng nhánh AI, quay về lookup tay.
+- Nếu sau 2 tuần M1 &lt;70% hoặc thời gian kiện tem OK tăng &gt;1' so với baseline → xem lại thiết kế checklist trước khi mở rộng.
 
 ---
 

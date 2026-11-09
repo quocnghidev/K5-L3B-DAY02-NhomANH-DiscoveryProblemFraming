@@ -1,4 +1,4 @@
-# Báo cáo cá nhân — MSSV_HoTen
+# Báo cáo cá nhân — 2A202603913_PhamThanhAn
 
 > Đổi tên file theo quy tắc `MSSV_HoTen.md`, ví dụ `20241234_NguyenVanAn.md` (MSSV trước, dấu `_`, họ tên viết liền không dấu). Sửa cả dòng tiêu đề phía trên cho khớp.
 > Template chi tiết và prompt mẫu cho từng mục: [docs/01-worksheet.md](../../docs/01-worksheet.md).
@@ -6,11 +6,11 @@
 
 ## 1. Thông tin học viên
 
-- Họ tên:
-- MSSV:
+- Họ tên: Phạm Thành An
+- MSSV: 2A202603913
 - Email trường (không bắt buộc, repo có thể để public):
-- Tên nhóm:
-- Link repo nhóm:
+- Tên nhóm: Nhóm ANH
+- Link repo nhóm: https://github.com/quocnghidev/K5-L3B-DAY02-NhomANH-DiscoveryProblemFraming
 
 ---
 
@@ -124,18 +124,15 @@ Quy trình nháp hiện tại:
 
 ## 4. Tôi đã tham gia phần nào (CP3 → CP7)
 
+> Vai trong nhóm theo `report/team/task_split.md`: **C — Framing**, phụ trách `report/team/group_report.md` §4–§7.
+
 | Hoạt động | Tôi đã làm gì? | Kết quả / ảnh hưởng tới bài nhóm |
 |---|---|---|
-| Pitch Problem Card | | |
-| Phản biện bài của bạn khác | Câu hỏi tôi đã đặt: | |
-| Nhận phản biện | Câu hỏi tôi nhận được: | Tôi đã sửa gì: |
-| Gom cluster / cây OST | | |
-| Chọn candidate problem | | |
-| Kiểm chứng / research | | |
-| Quy trình nhóm | | |
-| Problem Statement | | |
-| Mức can thiệp AI | | |
-| Quyết định | | |
+| Quy trình nhóm (CP5, §4) | Vẽ Mermaid quy trình hiện tại và tương lai; lập bảng từng bước có actor, input, output, thời gian, handoff; lập bảng before/after; lưu bản Mermaid riêng ở `report/assets/cp5-quy-trinh-mermaid.md` | Chỉ rõ 2 bottleneck (đối chiếu bằng mắt; dò đơn khi tem fail). Quy trình tương lai tách bước Rule / AI / Con người, có 4 điểm HITL và 3 phương án quay về |
+| Problem Statement v0 (CP5, §5) | Viết đủ 6 trường; đặt 3 metric M1–M3 (tỉ lệ tick đủ dòng, thời gian/kiện, lệch kiểm kê), mỗi metric có baseline, target, cách đo; ghi các phản biện và việc nhóm đồng ý hay không | Mọi số ghi rõ "ước lượng / chưa đo" vì chưa phỏng vấn kho. M2 (thời gian) được đổi thành guardrail: tick không được làm chậm hơn trước |
+| Mức can thiệp AI (CP6, §6) | Lập ma trận độ mơ hồ × độ phức tạp tách theo phần việc; so sánh No AI / Rule / Workflow / Agent; điền AI Canvas (ghi rõ dữ liệu input); trả lời 2 câu hỏi PAIR | Chọn Workflow. Đề xuất cho Rule lọc ứng viên trước, AI chỉ chạy khi Rule ra >3 đơn; nếu Rule đã đủ thì hạ xuống mức Rule |
+| Problem Statement v1 + eval (CP6, §7) | Viết PS v1 thêm AI intervention point, mức chọn, rủi ro & người kiểm tra; thêm metric M4 (đơn đúng trong top-3) và M5 (chọn nhầm đơn = 0); lập bảng "v0 → v1, vì sao đổi"; viết 5 tiêu chí đánh giá và kế hoạch bộ eval 30 kiện | v1 thu hẹp actor (list xuất mở được + tem fail ≥5% kiện) và thêm metric đo chất lượng gợi ý, theo kết luận PAIR "báo nhầm tệ hơn bỏ sót" |
+| Quyết định (CP6, §8) | Bổ sung ngưỡng dừng gắn với metric M1, M4, M5 và ngưỡng "Rule lọc đủ thì tắt AI" | Ngưỡng dừng của nhóm đo được và khớp với §6–§7. Phần quyết định Not Yet do vai A chốt |
 
 ---
 
