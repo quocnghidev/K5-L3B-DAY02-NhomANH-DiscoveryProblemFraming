@@ -1,13 +1,13 @@
 # Idea đã chốt — mang đi nhóm
 
-> Bản chốt đề xuất (cá nhân → pitch CP3). Nhóm có thể sửa sau phỏng vấn CP4; mọi số là **ước lượng / chưa đo**.  
-> Không pitch gọi vốn. Không build app/AI trong lab.
+> Bản chốt (cá nhân → nhóm). **Mọi số & hành vi kho = giả định / chưa đo** (lab không có phỏng vấn người trong kho).  
+> Không pitch gọi vốn. Không build product trong lab — chỉ framing.
 
 ---
 
 ## 1. Idea (1 câu)
 
-**Trạm khui hoàn kho TMĐT vừa:** bắt buộc **hiện list xuất gốc + tick đủ/thiếu/tráo tại bàn** trước khi cộng tồn — làm bằng **Rule/SOP + 1 view trên data kho đã có** (Sheets/OMS đang dùng), không làm SaaS “cứu tem rách”, không đua camera-theo-mã.
+**Trạm khui hoàn kho TMĐT vừa:** bắt buộc **list xuất gốc + tick đủ/thiếu/tráo** trước khi cộng tồn (**Rule/SOP + 1 view** trên data đã có); khi **tem quét fail**, thêm **1 bước AI gợi ý 2–3 đơn ứng viên** → người chọn (HITL) → mới mở list tick. Không đua camera-theo-mã, không Agent tự chốt đơn/tồn.
 
 ---
 
@@ -19,88 +19,92 @@
 
 | | |
 |---|---|
-| **Actor** | NV bàn khui kho fulfillment / shop tự kho **vừa** (~50–300 kiện hoàn/ngày, giả định); công cụ: quét + Sheets hoặc OMS nhẹ + cam góc |
-| **Không phải actor** | Kho enterprise đã WMS full; forwarder; shop nails; “mọi seller sàn” |
-| **Bottleneck** | Bước **khui → đối chiếu list → ghi nhận** (trước cộng tồn) |
-| **Triệu chứng dễ nhầm** | “Chậm vì mất tem” — đó là **nhánh phụ**; core = thiếu / không dùng list tick |
+| **Actor** | NV bàn khui kho fulfillment / shop tự kho **vừa** (~50–300 kiện hoàn/ngày, *giả định*); quét + Sheets/OMS nhẹ + cam góc |
+| **Bottleneck** | (1) Thiếu / không dùng list tick trước restock · (2) *Giả định nhánh AI:* tem fail → dò đơn lâu |
 | **Stakeholder** | Dùng: NV khui · Duyệt: trưởng ca · Chịu tiền: chủ shop / chủ kho |
 
 ---
 
-## 3. Core value & giả định chết người
+## 3. Core value & giả định (khai báo rõ — chưa kiểm chứng người thật)
 
-**Core value (giữ 1):** *Đối chiếu đúng trước khi restock* (đủ / thiếu / tráo), không phải “có AI” hay “có app”.
+**Core value:** *Đối chiếu đúng trước khi restock.*
 
-| # | Giả định chết người | Nếu sai thì… |
-|---|---|---|
-| 1 | Ở kho target, NV **thường không** soi list từng dòng khi khui multi-SKU (hoặc list không hiện tại bàn) | Đổi ngách |
-| 2 | List xuất gốc **đã nằm** ở Sheets/OMS mở được — không cần nhóm build đồng bộ Shopee/TikTok ngày 1 | Not Yet / thu hẹp chỉ SOP giấy |
-| 3 | Sót/tráo hoặc phút dư đối chiếu đủ đau để trưởng ca chịu thử SOP 1–2 ca | No-Go sản phẩm; chỉ ghi nhận quan sát |
+| # | Giả định | Vai trò | Nếu sai thì… |
+|---|---|---|---|
+| G1 | NV thường không soi list từng dòng (hoặc list không hiện tại bàn) | Value — lý do có Rule | Chỉ cần nhắc miệng / đã đủ OMS |
+| G2 | List xuất gốc đã mở được trên Sheets/OMS — không build đồng bộ đa sàn ngày 1 | Feasibility Rule | Thu hẹp SOP giấy / Not Yet |
+| G3 | Tem fail + lookup thủ công (SĐT/Sheets) vẫn tốn nhiều phút / dễ sai đơn | Value — **lý do có AI** | **Tắt AI**, chỉ giữ Rule + tick |
+| G4 | Có input an toàn cho AI mỗi lần fail: metadata đơn gần đây (SĐT rút, SKU, shop…) ± ảnh tem/SP nếu kho cho phép | Feasibility AI | AI không chạy; fallback lookup tay |
+| G5 | Sai **chọn nhầm đơn** tệ hơn **không gợi ý** → AI chỉ suggest, không auto-select | Usability / boundary | Cấm auto-chốt |
 
-**Nhánh phụ (không phải lý do chốt):** kiện mất/rách tem. Chỉ mở rộng path lookup nếu CP4 đo được tần suất + workaround thật sự tắc.
+**Không có phỏng vấn:** điểm bằng chứng = thấp → quyết định lab mặc định **Not Yet** trên Value; framing vẫn viết đủ Rule + điểm AI có điều kiện G3.
 
 ---
 
-## 4. Giải pháp chốt (mức tối thiểu đủ dùng)
+## 4. Giải pháp chốt = Rule mặc định + 1 điểm AI (Workflow)
 
 ```text
-Quét / mở đơn
-  → Hiện list xuất gốc (1 màn / 1 tab cố định tại bàn)
-  → NV tick: đủ | thiếu | tráo | (ghi chú)
-  → Mới được cộng tồn / chuyển rổ
+[RULE] Quét OK
+  → Hiện list xuất gốc (1 màn)
+  → NV tick đủ | thiếu | tráo
+  → Mới cộng tồn
 
-Tem quét fail (nhánh sau)
-  → Lookup tối thiểu (SĐT / mã phụ / ảnh) + NGƯỜI chọn 1 đơn
-  → Rồi quay lại list + tick
-  → Máy không tự chốt đơn, không tự sửa tồn
+[RULE → AI → HITL] Quét FAIL
+  → Thu thập tín hiệu tối thiểu (SĐT/SKU/shop/ảnh còn đọc được)
+  → AI xếp hạng gợi ý tối đa 2–3 đơn (kèm lý do ngắn)
+  → NGƯỜI chọn 1 đơn hoặc “không khớp → góc chờ / lookup tay”
+  → Hiện list + tick như trên
+  → AI không tự chốt đơn, không sửa tồn, không gửi khiếu nại
 ```
 
-| Mức | Làm gì trong lab |
+| Mức | Vai trò |
 |---|---|
-| **No AI** | Đủ cho MVP |
-| **Rule** | Đơn ≥N SKU bắt buộc tick; cấm cộng tồn khi chưa tick; tem phụ lúc xuất (nếu kho chịu) |
-| **Workflow** | 1 view list + checkbox + log ca (Sheets hoặc màn OMS sẵn) |
+| **No AI / Rule** | Bắt buộc tick; cấm cộng tồn khi chưa tick; tem phụ lúc xuất (nếu được) — **luôn bật** |
+| **Workflow + AI** | Chỉ nhánh tem fail: AI rank ứng viên → HITL — **bật khi giả định G3** |
 | **Agent** | **Không chọn** |
-| **Không làm** | Camsight/VietCam clone · WMS full · Pack Station all-in-one · nhận diện ảnh đoán đơn |
+| **Không làm** | Clone Camsight · WMS full · AI tự đoán đơn không HITL |
 
-**Vì sao không đơn giản hơn nữa?** Chỉ “nhắc miệng soi list” không tạo hành vi đo được.  
-**Vì sao không phức tạp hơn?** Micro-SaaS đa sàn chết ở tích hợp + WTP; camera-theo-mã thị trường đã đỏ.
+**Vì sao không chỉ Rule?** Nếu G3 đúng, lookup tay vẫn là bottleneck định danh — Rule tick không giải được “đúng đơn nào”.  
+**Vì sao không Agent?** Bước tiếp theo cố định; chỉ một chỗ cần gợi ý.  
+**Token / chi phí:** ước lượng / chưa đo — 1 lần gọi model nhỏ mỗi kiện fail; đo sau nếu pilot.
+
+**Bảo mật (framing):** Chỉ gửi trường cần cho match; che SĐT một phần nếu được; không đưa toàn bộ DB đơn lên model; ảnh chỉ khi đã đồng ý.
 
 ---
 
-## 5. Metric & ngưỡng quyết định (lab)
+## 5. Metric & quyết định
 
-| Metric hành vi | Baseline | Target đề xuất | Cách đo |
+| Metric | Baseline | Target (đề xuất) | Cách đo *khi có điều kiện* |
 |---|---|---|---|
-| % kiện multi-SKU được tick đủ dòng trước restock | chưa đo | tăng rõ sau SOP (vd ≥80% mẫu 20 kiện) | Quan sát / checklist 1 ca |
-| Phút đối chiếu / kiện nhiều món | ước 2–4' (chưa đo) | giảm về ≤1' hoặc ↓ ≥50% | Log mẫu 10–20 kiện |
-| Số vụ sót/tráo hoặc lệch tồn gắn khâu hoàn / tháng | hỏi kho | hướng giảm (ngưỡng sau khi có số) | Hỏi trưởng ca + sổ khiếu nại |
+| % kiện multi-SKU tick đủ dòng trước restock | chưa đo | ↑ rõ sau SOP | Quan sát / checklist |
+| Phút định danh khi tem fail | chưa đo | ↓ ≥50% vs lookup tay *nếu bật AI* | Log mẫu kiện fail |
+| % lần HITL chọn đúng trong top-3 gợi ý (eval AI) | — | ngưỡng do nhóm đặt sau mẫu | So với đơn thật sau khi đã xác định |
 
-**Go:** giả định 1+2 đứng sau 2–3 interview/quan sát + kho chịu chạy SOP thử.  
-**Not Yet:** pain có nhưng list đã sẵn trên OMS và NV đã tick / lookup &lt;1–2'.  
-**No-Go:** không tiếp cận được actor hoặc data list không tồn tại mà không ai chịu xuất file.
+**Go (có điều kiện giả định):** G1+G2 cho Rule; thêm G3+G4 mới bật AI trong pilot framing.  
+**Not Yet (mặc định lab không interview):** giữ framing, không claim pain đã chứng minh.  
+**No-Go AI / tắt AI:** G3 sai (lookup &lt;1–2’) → quay về chỉ Rule.  
+**No-Go cả bài:** G2 sai nặng (không có list đâu cả).
 
 ---
 
-## 6. Cạnh tranh (góc đứng)
+## 6. Cạnh tranh
 
-| Họ | Họ giải | Mình không đua |
+| Họ | Họ giải | Mình |
 |---|---|---|
-| Camsight / Ship Xanh / VietCam | Quét được mã → video theo đơn | Không build cam |
-| Pancake / Sapo / KiotViet / WMS | OMS/WMS rộng; lookup khi còn mã | Không thay OMS |
-| **Ngách mình** | **Hành vi tick list tại bàn** trên kho Sheets/OMS nhẹ — Rule/Workflow, HITL | Feature vận hành đo được, không story “startup mất tem” |
+| Camsight / Ship Xanh | Video khi **còn mã** | Không build cam |
+| WMS Return Check | List + scan item (cần WMS) | Nhái hành vi tick trên Sheets/OMS nhẹ |
+| **Ngách** | Rule tick + **AI chỉ khi tem fail** (HITL) | Không SaaS “chỉ cứu tem” |
 
 ---
 
-## 7. Việc nhóm làm tiếp (theo thứ tự)
+## 7. Việc nhóm làm tiếp
 
-1. **CP3:** Hội tụ quanh idea này (outcome E + MVP B); không pitch 3 pain rời hay “tool AI kho”.  
-2. **CP4:** Hỏi 2–3 người — (a) multi-SKU có soi list không? (b) data list ở đâu? (c) lệch/sót gần nhất? (d) chịu thử checklist 1 ca không?  
-3. Có tín hiệu → viết Problem Statement v0 + quy trình trước/sau; quyết định Go / Not Yet / No-Go.  
-4. Ghi log nếu đổi idea (vì sao).
+1. Mang idea này vào CP5–CP6: quy trình trước/sau + PS v0/v1 + eval AI.  
+2. Không bịa Interview Snapshot; ghi rõ *giả định / chưa đo*.  
+3. Nếu sau này có người kho: kiểm G1–G3 trước — sai G3 thì **tắt AI** trong báo cáo.
 
 ---
 
 ## 8. Pitch 20 giây
 
-> “Ở bàn khui hoàn kho vừa, pain không phải thiếu AI hay thiếu camera — mà là **cộng tồn trước khi tick đủ list xuất gốc**. Mình chốt outcome: hết restock mù / sót–tráo. MVP lab: Rule + 1 màn list trên data kho đã có, đo % tick và phút/kiện. Mất tem chỉ là nhánh sau nếu phỏng vấn thấy thật sự tắc.”
+> “Outcome: hết restock mù — bắt buộc tick list xuất tại bàn (Rule). AI không thay SOP: chỉ **gợi ý 2–3 đơn khi tem fail**, người chọn rồi mới tick. Không interview được thì mọi số là giả định → **Not Yet** trên Value; tắt AI nếu lookup tay đã đủ nhanh.”
