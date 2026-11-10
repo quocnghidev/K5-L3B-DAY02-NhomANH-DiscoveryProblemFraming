@@ -14,15 +14,15 @@
 
 ## 2. Hội tụ nhóm (CP3)
 
-> Đã chốt theo `idea-chot.md` + bảng so sánh `CP3_SO_SANH_A_B_D_E.md`. Điền tối thiểu để khóa candidate; chi tiết pitch từng thành viên bổ sung khi có đủ tên trong `TEAM.md`.
+> Đã chốt theo `idea-chot.md` + hội tụ CP3. Thành viên / phân công: `TEAM.md`.
 
 ### 2.1. Pitch
 
 | # | Người đưa ra | Candidate (Job Story ngắn) | Actor | Bottleneck | Câu hỏi phản biện nhận được (ai hỏi) |
 |---:|---|---|---|---|---|
-| 1 | Cá nhân (idea-chot) | Khi khui hoàn multi-SKU, muốn tick theo list xuất gốc tại bàn để không cộng tồn mù | NV bàn khui kho vừa | Khui → đối chiếu list → ghi nhận | Kho đã hiện list trên OMS chưa? Data list ở đâu? |
-| 2 | Shortlist B | Khi xuất/nhận hoàn, muốn tem phụ + SOP + checklist trên file đã có để giảm hàng mù không cần app mới | NV khui + trưởng ca | Thiếu rule bắt buộc tick / nhận bao | Đã có tem phụ / từ chối bao mù chưa? |
-| 3 | Shortlist A (nhánh) | Khi tem fail, muốn định danh đơn rồi mới mở list tick | NV bàn khui | Định danh khi không quét được | % kiện máy quét bó tay? Workaround mất bao lâu? |
+| 1 | Lê Thanh Hà (idea-chot) | Khi khui hoàn multi-SKU, muốn tick theo list xuất gốc tại bàn để không cộng tồn mù | NV bàn khui kho vừa | Khui → đối chiếu list → ghi nhận | Kho đã hiện list trên OMS chưa? Data list ở đâu? |
+| 2 | Shortlist B (nhóm) | Khi xuất/nhận hoàn, muốn tem phụ + SOP + checklist trên file đã có để giảm hàng mù không cần app mới | NV khui + trưởng ca | Thiếu rule bắt buộc tick / nhận bao | Đã có tem phụ / từ chối bao mù chưa? |
+| 3 | Shortlist A — nhánh tem fail | Khi tem fail, muốn định danh đơn rồi mới mở list tick | NV bàn khui | Định danh khi không quét được | % kiện máy quét bó tay? Workaround mất bao lâu? |
 | 4 | Loại khỏi shortlist | Bàn giao bao cuối ngày khớp số kiện trước khi ký | NV nhận + trưởng ca | Nhận bao ký mù | *(loại — khó quan sát lab)* |
 
 ### 2.2. Cluster
@@ -71,23 +71,39 @@ Những ý đã gạch bỏ vì là solution đội lốt opportunity:
 
 ### 3.1. Assumption Map
 
-| # | Giả định | Loại (Value / Usability / Feasibility / Viability) | Quan trọng (1–5) | Đã có bằng chứng (1–5) | Kiểm chứng trước? |
-|---:|---|---|---:|---:|---|
-| 1 | Ở kho target, NV thường **không** soi list từng dòng khi khui multi-SKU (hoặc list không hiện tại bàn) | Value | 5 | 1 | ✅ Ưu tiên phỏng vấn |
-| 2 | List xuất gốc **đã mở được** trên Sheets/OMS kho đang dùng — không cần build đồng bộ đa sàn ngày 1 | Feasibility | 5 | 2 | ✅ Hỏi “data nằm đâu” |
-| 3 | Sót/tráo hoặc phút dư đối chiếu đủ đau để trưởng ca chịu **thử SOP/checklist 1–2 ca** | Value | 4 | 1 | ✅ Hỏi chuyện đã xảy ra + cam kết thử |
-| 4 | NV sẽ tuân thủ tick trước cộng tồn nếu có rule + 1 màn cố định (không bỏ về thói quen đếm hộp) | Usability | 4 | 1 | Sau khi có SOP thử |
-| 5 | Kho target **chưa** có WMS/return-check kiểu GoWarehouse (scan → load list → scan từng món) | Feasibility | 4 | 2 | ✅ Hỏi tool đang dùng |
-| 6 | Tem fail + lookup tay vẫn tắc (nhiều phút / dễ sai đơn) → AI gợi ý top-3 có ích hơn Rule thuần | Value (điều kiện bật AI) | 5 | 1 | ✅ Khai báo giả định; chưa có interview |
-| 7 | Input AI có sẵn an toàn (metadata đơn ± ảnh được phép); AI chỉ suggest không auto-chốt | Feasibility / Viability | 4 | 2 | Framing bảo mật + HITL |
+ID **G1–G5** là giả định chết người (khớp `idea-chot.md` và §6–§8). Các dòng không mang mã G vẫn phải hỏi, nhưng không quyết định bật/tắt AI.
 
-Giả định nhóm ưu tiên (không có người kho trong lab → **giữ bằng chứng = 1**, không bịa snapshot): **#1, #2, #6**. Guide nếu sau này hỏi được: `report/assets/cp4-interview-guide.md`.
+| # | ID | Giả định | Loại (Value / Usability / Feasibility / Viability) | Quan trọng (1–5) | Đã có bằng chứng (1–5) | Kiểm chứng trước? |
+|---:|---|---|---|---:|---:|---|
+| 1 | **G1** | Ở kho target, NV thường **không** soi list từng dòng khi khui multi-SKU (hoặc list không hiện tại bàn) | Value | 5 | 1 | ✅ Ưu tiên phỏng vấn |
+| 2 | **G2** | List xuất gốc **đã mở được** trên Sheets/OMS kho đang dùng — không cần build đồng bộ đa sàn ngày 1 | Feasibility | 5 | 2 | ✅ Hỏi “data nằm đâu” |
+| 3 | — | Sót/tráo hoặc phút dư đối chiếu đủ đau để trưởng ca chịu **thử SOP/checklist 1–2 ca** | Value | 4 | 1 | ✅ Hỏi chuyện đã xảy ra + cam kết thử |
+| 4 | — | NV sẽ tuân thủ tick trước cộng tồn nếu có rule + 1 màn cố định (không bỏ về thói quen đếm hộp) | Usability | 4 | 1 | Sau khi có SOP thử |
+| 5 | — | Kho target **chưa** có WMS/return-check kiểu GoWarehouse (scan → load list → scan từng món) | Feasibility | 4 | 2 | ✅ Hỏi tool đang dùng |
+| 6 | **G3** | Tem fail + lookup tay vẫn tắc (nhiều phút / dễ sai đơn) **sau khi** đã lọc theo shop + 4 số cuối SĐT + 14 ngày. Chỉ khi tập còn >3 đơn thì AI top-3 mới có ích hơn Rule thuần | Value (điều kiện bật AI) | 5 | 1 | ✅ Khai báo giả định; chưa có interview |
+| 7 | **G4** | Input AI có sẵn và an toàn (4 số cuối SĐT, SKU, shop, ± ảnh SP nếu kho cho phép); không gửi SĐT đầy đủ / tên khách | Feasibility / Viability | 4 | 2 | Framing bảo mật; hỏi kho có cho dùng ảnh không |
+| 8 | **G5** | Chọn nhầm đơn (báo nhầm) tệ hơn không gợi ý được (bỏ sót) → AI chỉ suggest, không auto-chốt | Usability / boundary | 5 | 1 | Chưa hỏi NV. Đây là lựa chọn thiết kế (§6.4), chưa phải hành vi đã quan sát |
+
+Giả định nhóm ưu tiên (không có người kho trong lab → **giữ bằng chứng = 1**, không bịa snapshot): **G1, G2, G3**. Câu hỏi Mom Test (chưa dùng): [`report/assets/cp4-interview-guide.md`](../assets/cp4-interview-guide.md).
 
 ### 3.2. Kiểm chứng
 
-Cách đã dùng: **Research desktop (đã mở link)** + **khung phỏng vấn sẵn** — *chưa có Interview Snapshot người thật tại thời điểm ghi mục này (không bịa)*.
+Cách đã dùng: **Research desktop (mở lại link 2026-11-09)** + **khung phỏng vấn Mom Test đã soạn** — *chưa có Interview Snapshot người thật (0 người, không bịa)*.
 
-Interview snapshot — template trống (copy khi hỏi xong; hoặc file `report/assets/cp4-interview-snapshot-N.md`):
+Câu hỏi đã soạn, toàn bộ hỏi hành vi đã xảy ra (nguyên văn trong [`cp4-interview-guide.md`](../assets/cp4-interview-guide.md)):
+
+1. Lần gần nhất khui hoàn, từ nhận bao đến cộng tồn đã làm những bước nào?
+2. Đơn nhiều món trong ca đó có mở list xuất gốc không, hay đối chiếu bằng mắt?
+3. List đang nằm ở đâu, và ai mở được ngay tại bàn?
+4. Lần gần nhất thiếu / tráo / lệch tồn vì hàng hoàn — chuyện gì đã xảy ra?
+5. Lần gần nhất tem quét fail — làm gì tiếp, mất bao lâu, kiện đi đâu?
+6. Khi đã có shop và vài số điện thoại, còn phải dò bao nhiêu đơn?
+7. Đang dùng phần mềm nào lúc khui?
+8. Nếu tuần này in checklist tick-trước-cộng-tồn, cho xem hoặc cho quan sát 1 ca được không?
+
+Không có câu nào dạng “bạn có muốn dùng AI không”.
+
+Interview snapshot — template trống (copy khi hỏi xong; file [`cp4-interview-snapshot-1.md`](../assets/cp4-interview-snapshot-1.md) cũng đang để trống):
 
 | Trường | Nội dung |
 |---|---|
@@ -103,20 +119,21 @@ Tổng hợp:
 | Nguồn | Số người / số mẫu | Tín hiệu xác nhận | Tín hiệu phản bác |
 |---|---:|---|---|
 | Phỏng vấn kho / NV khui | **0** (đang mở) | — | — |
-| Research tool (Camsight, Ship Xanh, GoWarehouse, ChannelDock, ResReturn) | 5 nguồn đã mở link | Pattern “scan → thấy expected SKU → check trước restock” là best practice WMS; VN mạnh ở **video theo mã** | Tool sẵn **giả định quét được mã** + thường cần WMS/OMS; không chứng minh kho Sheets VN thiếu tick |
+| Research tool (Camsight, Ship Xanh, GoWarehouse, ChannelDock, ResReturn) | 5 nguồn, HTTP 200 ngày 2026-11-09; đọc lại toàn văn ChannelDock và ResReturn | Pattern “scan → thấy expected SKU → check / grade trước restock” là best practice WMS; VN mạnh ở **video theo mã** | Tool sẵn **giả định quét được mã** hoặc cần WMS; không chứng minh kho Sheets VN thiếu tick. Số NRF 19,3% (ChannelDock, thị trường Mỹ) **không** dùng cho G1/G3 |
 | Phản biện thị trường (Gemini — chỉ giữ ý, bỏ số %) | 1 vòng | Micro-tool mất tem khó thu tiền; integration trap | Phân bổ % kho / WTP số cụ thể = chưa xác minh → **không dùng làm bằng chứng** |
 
-**Tín hiệu phản bác (desktop, ghi sớm):** Nếu kho đã Camsight/Ship Xanh + gõ SĐT trên Pancake/Sapo ra list trong &lt;1–2 phút và đã tick/đối chiếu → giả định #1–#2 yếu → **đổi/thu hẹp**.
+**Tín hiệu phản bác (desktop, ghi sớm):** Nếu kho đã Camsight/Ship Xanh + gõ SĐT trên Pancake/Sapo ra list trong &lt;1–2 phút và đã tick/đối chiếu → **G1–G2 yếu** → đổi/thu hẹp. Nếu tem fail nhưng lọc theo shop + 4 số + 14 ngày đã ra ≤3 đơn ở phần lớn ca → **G3 yếu** → tắt AI, giữ Rule (§6.2).
 
 **Nhóm đã sửa problem thế nào sau kiểm chứng:**
 
-- Trước research: dễ lệch sang “cứu kiện mất mã” hoặc “camera theo mã” hoặc “app AI kho”.
-- Sau research + chốt: **core = Rule tick list trước restock**; **AI = 1 điểm** trên nhánh tem fail (gợi ý 2–3 đơn + HITL); không build cam; không Agent.
-- Lab không có phỏng vấn kho: mọi Value = giả định → **Not Yet**; nếu sau này G3 (assumption #6) sai → **tắt AI**, giữ Rule.
+- Trước research: dễ lệch sang “cứu kiện mất mã”, “camera theo mã”, hoặc “app AI kho”.
+- Sau research desktop: **core = Rule tick list trước restock**. Video-theo-mã và WMS return-check không phải khoảng trống của lab. AI không thay bước tick.
+- Sau khi so 4 mức (§6.2) và ngưỡng dừng (§8): Rule lọc trước (shop + 4 số cuối SĐT + đơn đang hoàn 14 ngày). AI xếp hạng tối đa 3 đơn **chỉ khi** tập lọc còn >3 ứng viên. Nếu ≥80% ca tem fail đã ≤3 ứng viên → tắt AI, hạ xuống Rule. G5 buộc HITL kể cả khi chỉ còn 1 ứng viên: AI không tự chọn đơn.
+- Lab không có phỏng vấn kho: G1 và G3 (Value) vẫn bằng chứng = 1 → **Not Yet**. Không lấy tỉ lệ hoàn hàng Mỹ làm bằng chứng cho kho Việt Nam.
 
 ### 3.3. Research giải pháp đã có
 
-> Link đã mở/kiểm nội dung (Nov 2026). Chi tiết dài: `report/individual/COMPETITOR_RESEARCH.md`.
+> Mở lại ngày 2026-11-09. Biên bản: [`report/assets/cp4-research-link-check.md`](../assets/cp4-research-link-check.md). Không có file `COMPETITOR_RESEARCH.md` — bảng này là nguồn research của nhóm.
 
 | Công cụ / case / pattern | Link | Giải bước nào trong quy trình? | Điểm mạnh | Khoảng trống / rủi ro | Bài học cho nhóm |
 |---|---|---|---|---|---|
@@ -130,9 +147,11 @@ Tổng hợp:
 
 ```text
 Thế giới đã giải mạnh: (1) video theo mã khi scan được — Camsight/Ship Xanh;
-(2) list + scan item trước restock — WMS (GoWarehouse/ChannelDock pattern).
-Khoảng trống lab: kho Sheets/OMS nhẹ — Rule tick tại bàn + AI chỉ khi tem fail (gợi ý + HITL).
-Không build cam / Agent. Value vẫn giả định → Not Yet.
+(2) list + scan/grade trước restock — WMS (GoWarehouse, ChannelDock, ResReturn).
+Khoảng trống lab vẫn chỉ là giả định: kho Sheets/OMS nhẹ chưa có bước tick bắt buộc.
+AI không lấp khoảng trống đó. AI chỉ còn vai trò khi tem fail và Rule lọc
+(shop + 4 số + 14 ngày) vẫn để lại hơn 3 đơn (G3). Không build cam / Agent.
+Chưa có hành vi người kho → Not Yet.
 ```
 
 ---
@@ -416,7 +435,9 @@ Vì sao: phần lớn quy trình có đúng/sai rõ nên Rule là đủ. Chỉ �
 
 ## 10. Tài liệu tham khảo
 
-- `report/individual/idea-chot.md`
-- `report/individual/COMPETITOR_RESEARCH.md` (nếu có trên nhánh)
+- `report/individual/idea-chot.md` — bản chốt candidate (G1–G5)
+- [`report/assets/cp4-interview-guide.md`](../assets/cp4-interview-guide.md) — câu hỏi Mom Test, chưa dùng
+- [`report/assets/cp4-interview-snapshot-1.md`](../assets/cp4-interview-snapshot-1.md) — snapshot trống
+- [`report/assets/cp4-research-link-check.md`](../assets/cp4-research-link-check.md) — biên bản mở 5 link, 2026-11-09
 - Link research §3.3 (Camsight, Ship Xanh, GoWarehouse, ChannelDock, ResReturn)
 
